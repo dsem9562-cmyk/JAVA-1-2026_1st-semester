@@ -1,0 +1,64 @@
+<!-- 시스템 사양 섹션 -->
+    <section class="container my-5">
+        <h2 class="text-center mb-4 accent-purple">권장 시스템 사양</h2>
+        <h2 class="text-center mb-5 accent-purple">최소 및 권장 사양을 확인하고, 원활한 플레이를 위한 PC 사양을 맞춰주세요.</h2>
+
+        <!-- 탭: Windows / Mac (첨부 이미지처럼) -->
+        <ul class="nav nav-tabs justify-content-center mb-4" id="osTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="windows-tab" data-bs-toggle="tab" data-bs-target="#windows" type="button" role="tab">Windows</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="mac-tab" data-bs-toggle="tab" data-bs-target="#mac" type="button" role="tab">Mac</button>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <!-- Windows 탭 -->
+            <div class="tab-pane fade show active" id="windows" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>항목</th>
+                                <th>최소 사양</th>
+                                <th>권장 사양</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>운영체제</td><td>Windows 10 정품 (x64)</td><td>Windows 11 정품 (x64)</td></tr>
+                            <tr><td>CPU</td><td>Intel Core i3-530 / AMD A6-3650 / ARM 미지원</td><td>Intel Core i5-3300 / AMD Ryzen 3 1200 / ARM 미지원</td></tr>
+                            <tr><td>CPU 기능</td><td>SSE2</td><td>SSE4</td></tr>
+                            <tr><td>메모리(RAM)</td><td>2GB</td><td>4GB</td></tr>
+                            <tr><td>여유 저장 공간</td><td>HDD 16GB 이상</td><td>SSD 16GB 이상</td></tr>
+                            <tr><td>그래픽 카드</td><td>NVIDIA GeForce 9600GT / AMD HD 6570 / Intel HD 4600 (VRAM 1GB 이상)</td><td>NVIDIA GeForce GTX 560 / AMD HD 6950 / Intel UHD 630 (VRAM 2GB 이상)</td></tr>
+                            <tr><td>그래픽 카드 기능</td><td>DirectX 10</td><td>DirectX 11</td></tr>
+                            <tr><td>권장 그래픽 설정</td><td>해상도: 1024x768, 품질: 낮음</td><td>해상도: 1920x1080, 품질: 높음</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Mac 탭 (실제 사양 기반, 간단히 예시) -->
+            <div class="tab-pane fade" id="mac" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>항목</th>
+                                <th>최소 사양</th>
+                                <th>권장 사양</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>운영체제</td><td>macOS 10.15 이상</td><td>macOS 13 Ventura 이상</td></tr>
+                            <tr><td>CPU</td><td>Intel Core i5 또는 Apple M1</td><td>Apple M2 이상</td></tr>
+                            <tr><td>메모리(RAM)</td><td>4GB</td><td>8GB 이상</td></tr>
+                            <tr><td>여유 저장 공간</td><td>SSD 16GB 이상</td><td>SSD 30GB 이상</td></tr>
+                            <tr><td>그래픽</td><td>Metal 지원 GPU</td><td>Metal 2 지원 GPU</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
