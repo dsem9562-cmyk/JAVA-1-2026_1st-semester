@@ -10,6 +10,7 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="css/main.css"></link>
     <script src="https://test.js"></script>
     <script src="https://search.js"></script>
 
@@ -20,47 +21,7 @@
     </script>
 
     <style>
-      body {
-        background-color: #0a0e17;
-        color: #fff;
-        font-family: "Arial", sans-serif;
-      }
-      .navbar {
-        background-color: #000;
-      }
-      .hero {
-        background: linear-gradient(to bottom, #1e1e1e, #0a0e17);
-        min-height: 60vh;
-      }
-      .accent-purple {
-        color: #a020f0;
-      }
-      .accent-red {
-        color: #ff0000;
-      }
-      .card {
-        background-color: #1e1e1e;
-        border: none;
-        transition:
-          transform 0.3s,
-          box-shadow 0.3s;
-      }
-      .card:hover {
-        transform: scale(1.05);
-        box-shadow: 0 10px 20px rgba(160, 32, 240, 0.5);
-      }
-      .card-img-top {
-        height: 200px;
-        object-fit: cover;
-        border-radius: 10px 10px 0 0;
-      }
-      .btn-primary {
-        background-color: #a020f0;
-        border: none;
-      }
-      .btn-primary:hover {
-        background-color: #800080;
-      }
+      /* 커스텀 스타일 */
     </style>
   </head>
   <body>
@@ -258,6 +219,44 @@
               <h5 class="card-title">새로운 챔피언 출시</h5>
               <p class="card-text">2026 루나 레벨 이벤트!</p>
               <a href="#" class="btn btn-outline-primary">더 보기</a>
+      <!-- ===== 검색 결과 섹션 (기본 숨김) ===== -->
+      <section id="searchResults">
+        <!-- 키워드 헤더 -->
+        <div class="search-keyword-header">
+          <h1 id="searchKeywordDisplay"></h1>
+        </div>
+        <!-- 본문: 사이드바 + 콘텐츠 -->
+        <div class="search-body">
+          <div class="container-fluid px-0">
+            <div class="row g-0">
+                <!-- 왼쪽 카테고리 사이드바 -->
+                <div class="col-md-3 col-lg-2 search-sidebar bg-white py-4">
+                  <div class="px-3 mb-3" style="font-size:0.8rem; color:#999; text-transform:uppercase; letter-spacing:0.1em;">카테고리</div>
+                    <div class="search-category-item active" onclick="switchCategory('champion', this)">
+                      챔피언 <span class="count" id="champCount">(0)</span>
+                    </div>
+                                            <div class="search-category-item" onclick="switchCategory('news', this)">
+                            뉴스 <span class="count" id="newsCount">(0)</span>
+                        </div>
+                    </div>
+                    <!-- 오른쪽 콘텐츠 -->
+                    <div class="col-md-9 col-lg-10 search-content-area">
+                        <!-- 챔피언 결과 -->
+                        <div id="resultChampion">
+                            <h5 class="mb-4" style="color:#333;">챔피언</h5>
+                            <div id="championResultList"></div>
+                    </div>
+                    <!-- 뉴스 결과 -->
+                    <div id="resultNews" style="display:none;">
+                        <h5 class="mb-4" style="color:#333;">뉴스</h5>
+                        <div id="newsResultList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
             </div>
           </div>
         </div>

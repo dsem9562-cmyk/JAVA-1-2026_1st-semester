@@ -1,0 +1,71 @@
+/* ── 기본 레이아웃 ──────────────────────────────────────────── */
+body { background-color: #0a0e17; color: #fff; font-family: 'Arial', sans-serif; }
+.navbar { background-color: #000; }
+.hero { background: linear-gradient(to bottom, #1e1e1e, #0a0e17); min-height: 60vh; }
+
+/* ── 강조 색상 ──────────────────────────────────────────────── */
+.accent-purple { color: #a020f0; }
+.accent-red { color: #ff0000; }
+
+/* ── 카드 ────────────────────────────────────────────────────── */
+.card { background-color: #1e1e1e; border: none; transition: transform 0.3s, box-shadow 0.3s; }
+.card:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(160, 32, 240, 0.5); }
+.card-img-top { height: 200px; object-fit: cover; border-radius: 10px 10px 0 0; }
+
+/* ── 버튼 ────────────────────────────────────────────────────── */
+.btn-primary { background-color: #a020f0; border: none; }
+.btn-primary:hover { background-color: #800080; }
+
+/* ── 검색 결과 페이지 ────────────────────────────────────────── */
+#searchResults { display: none; }
+
+.search-keyword-header {
+    background: #0a0a0a;
+    background-image: radial-gradient(ellipse at center, #1a1a1a 0%, #000 70%);
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 2px solid #c8a96e;
+}
+.search-keyword-header h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.05em;
+}
+
+.search-body { background-color: #f0ede8; min-height: 500px; }
+.search-sidebar { border-right: 1px solid #ddd; }
+
+.search-category-item {
+    padding: 14px 20px;
+    cursor: pointer;
+    color: #333;
+    font-size: 0.95rem;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+}
+.search-category-item:hover { background: #e0dcd5; }
+.search-category-item.active {
+    border-left: 3px solid #c8253a;
+    font-weight: 700;
+    color: #c8253a;
+    background: #e8e4df;
+}
+.search-category-item .count { color: #999; font-size: 0.85rem; margin-left: 6px; }
+
+.search-content-area { padding: 30px; }
+
+.search-result-card {
+    background: #fff;
+    border: none;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s;
+}
+.search-result-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+.search-result-card img { width: 110px; height: 80px; object-fit: cover; border-radius: 6px 0 0 6px; }
+
+.no-result { text-align: center; padding: 80px 20px; color: #666; }
+.no-result h4 { color: #333; }
