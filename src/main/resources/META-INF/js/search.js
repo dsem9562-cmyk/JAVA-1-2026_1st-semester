@@ -68,5 +68,33 @@ switchCategory('champion', document.querySelector('.search-category-item')); // 
 document.querySelector('.hero').classList.add('d-none'); // 히어로 섹션 숨김
 document.querySelectorAll('section:not(#searchResults)').forEach(s => s.classList.add('d-none')); // 나머지 섹션 숨김
 document.getElementById('searchResults').classList.remove('d-none'); // 기타 섹션까지 숨김
-document.getElementById('searchResults').style.display = 'block'; // 결과 섹션만 출력
+document.getElemen7tById('searchResults').style.display = 'block'; // 결과 섹션만 출력
 }
+
+// ── 카테고리 전환 ────────────────────────────────────────────
+function switchCategory(type, el) {
+    document.querySelectorAll('.search-category-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('resultChampion').style.display = type === 'champion' ? 'block' : 'none';
+    document.getElementById('resultNews').style.display = type === 'news' ? 'block' : 'none';
+}
+
+// ── 폼 이벤트 ────────────────────────────────────────────────
+document.getElementById('searchForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const query = document.getElementById('searchInput').value;
+    performSearch(query);
+});// ── 카테고리 전환 ────────────────────────────────────────────
+function switchCategory(type, el) {
+    document.querySelectorAll('.search-category-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('resultChampion').style.display = type === 'champion' ? 'block' : 'none';
+    document.getElementById('resultNews').style.display = type === 'news' ? 'block' : 'none';
+}
+
+// ── 폼 이벤트 ────────────────────────────────────────────────
+document.getElementById('searchForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const query = document.getElementById('searchInput').value;
+    performSearch(query);
+});
