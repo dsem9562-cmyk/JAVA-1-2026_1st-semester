@@ -69,3 +69,46 @@ body { background-color: #0a0e17; color: #fff; font-family: 'Arial', sans-serif;
 
 .no-result { text-align: center; padding: 80px 20px; color: #666; }
 .no-result h4 { color: #333; }
+
+/* ── [추가] 테마 토글 버튼 (폰트 크기, 색상 등 ) ──────────────── */
+#themeToggleBtn {
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+body.light-mode #themeToggleBtn {
+    color: #212529;
+}
+
+/* ── [추가] 라이트 모드 (다양한 색상 정보 ─────────────────────── */
+body.light-mode {
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+body.light-mode .navbar {
+    background-color: #e9ecef !important;
+}
+
+body.light-mode .navbar .navbar-brand,
+body.light-mode .navbar .nav-link {
+    color: #212529 !important;
+}
+
+body.light-mode .hero {
+    background: linear-gradient(to bottom, #dce3ea, #f8f9fa);
+}
+
+body.light-mode .card {
+    background-color: #ffffff;
+    color: #212529;
+    border: 1px solid #dee2e6;
+}
+
+body.light-mode .card-title {
+    color: #212529;
+}
+
+body.light-mode .card-text {
+    color: #555;
+}

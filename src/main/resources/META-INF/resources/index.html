@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/main.css"></link>
     <script src="https://test.js"></script>
     <script src="https://search.js"></script>
+    <script src="https://toggle.js"></script>
 
     <script>
         window.onload = function() {
@@ -28,6 +29,11 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">NAVVAR</a>
+        <img src="/images/LOL.webp" alt="" width="30" height="24">
+        <!-- [변경] "Navbar" 텍스트 → 다크/라이트 토글 버튼 -->
+        <button class="btn border-0" id="themeToggleBtn" onclick="toggleTheme()">
+         DARK
+        </button>
         <button
           class="navbar-toggler"
           type="button"
