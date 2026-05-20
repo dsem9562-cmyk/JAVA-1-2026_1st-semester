@@ -4,7 +4,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.SessionHandler;
 import io.vertx.ext.web.sstore.LocalSessionStore;
 import jakarta.enterprise.event.Observes;
-import io.quarkus.vertx.http.HttpServerStart;
+//import io.quarkus.vertx.http.HttpServerStart;
 import jakarta.inject.Inject;
 import io.vertx.core.Vertx;
 

@@ -15,12 +15,12 @@ public class DataSeeder {
     void onStart(@Observes StartupEvent ev) { // CDI 표준, 이벤트
         // DataSeeder.java onStart() 메서드에 추가
         // User 초기 데이터 (챔피온 데이터와 별도 블록)
-        if (User.count() == 0) {
+        // if (User.count() == 0) {
         User guest = new User();
         guest.username = "guest";
-        guest.password = "123123";
+        guest.password = "96CAE35CE8A9B0244178BF28E4966C2CE1B8385723A96A6B838858CDD6CA0A1E";
         guest.persist();
-        }
+        
         
         if (Champion.count() > 0) return; // 이미 데이터 있으면 중단
    
