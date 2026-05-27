@@ -17,6 +17,9 @@ public class User extends PanacheEntity {
     public String email;
     public String phone; // 연락처
 
+    // 신규추가: 프로필사진파일명
+    public String profileImage; // 저장된파일명(UUID 기반)
+
     // 아이디로 조회
     public static User findByUsername(String username) {
         return find("username", username).firstResult();

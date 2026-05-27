@@ -1,50 +1,69 @@
 package org.acme.login;
 
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import java.net.URI;
-import java.io.InputStream;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
 import io.vertx.ext.web.RoutingContext;
 
-@Path("/") // 기본 경로가 최상위 /
+import org.jboss.resteasy.reactive.RestForm;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
+
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.Map;
+import java.util.UUID;
+
+@Path("/")
 public class AuthResource {
+
+    @Inject
+    RoutingContext context;
 
     // GET / → 세션 유무에 따라 메인 페이지 분기
     @GET
     @Produces(MediaType.TEXT_HTML)
     public Response mainPage() {
         String loginUser = context.session().get("loginUser");
-    
-        System.out.println("=== [GET /] 세션 ID : " +
-    context.session().id());
-         System.out.println("=== [GET /] loginUser : " + loginUser);
-    
-         String htmlPath = (loginUser != null)
-            ? "META-INF/resources/login/main_after_login.html"
-            : "META-INF/resources/main_index.html";
 
-        InputStream html =
-    getClass().getClassLoader().getResourceAsStream(htmlPath);
+        System.out.println("=== [GET /] 세션 ID : " + context.session().id());
+        System.out.println("=== [GET /] loginUser : " + loginUser);
+
+        String htmlPath = loginUser != null
+                ? "META-INF/resources/login/main_after_login.html"
+                : "META-INF/resources/main_index.html";
+
+        InputStream html = getClass()
+                .getClassLoader()
+                .getResourceAsStream(htmlPath);
+
         return Response.ok(html).build();
     }
 
-    @Inject
-    RoutingContext context; // Quarkus Vert.x 세션 접근
     // GET /login → 로그인 HTML 페이지 반환
     @GET
-    @Path("/login") // 경로 명시
-    @Produces(MediaType.TEXT_HTML) // 서버 → 클라
+    @Path("/login")
+    @Produces(MediaType.TEXT_HTML)
     public Response loginPage() {
         InputStream html = getClass()
-            .getClassLoader()
-            .getResourceAsStream("META-INF/resources/login/login.html");
+                .getClassLoader()
+                .getResourceAsStream("META-INF/resources/login/login.html");
+
         return Response.ok(html).build();
     }
 
-    @POST // 아이디, 패스워드 전송받음
+    // POST /login_check → 로그인 처리
+    @POST
     @Path("/login_check")
     @Transactional
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -52,9 +71,9 @@ public class AuthResource {
             @FormParam("username") String username,
             @FormParam("password") String password) {
 
-        User user = User.findByUsername(username); // 아이디 조회
+        User user = User.findByUsername(username);
 
-        if (user == null || !user.password.equals(password)) { // 존재 확인
+        if (user == null || !user.password.equals(password)) {
             return Response
                     .seeOther(URI.create("/login?error=1"))
                     .build();
@@ -68,52 +87,57 @@ public class AuthResource {
                 .build();
     }
 
+    // GET /after_login → 로그인 후 페이지
     @GET
     @Path("/after_login")
     @Produces(MediaType.TEXT_HTML)
     public Response afterLogin() {
-
-        // 세션 체크: 로그인 안 한 사용자 차단
         String loginUser = context.session().get("loginUser");
 
-        // 세션 내용 로그 출력
         System.out.println("=== 세션 ID : " + context.session().id());
         System.out.println("=== loginUser : " + loginUser);
 
         if (loginUser == null) {
-            // 세션 없음 → 로그인 페이지로 강제 이동
             return Response
                     .seeOther(URI.create("/login"))
                     .build();
         }
 
-        // 세션 있음 → 로그인 후 HTML 반환
         InputStream html = getClass()
                 .getClassLoader()
                 .getResourceAsStream("META-INF/resources/login/main_after_login.html");
+
         return Response.ok(html).build();
     }
 
+    // GET /logout → 로그아웃
     @GET
     @Path("/logout")
     public Response logout() {
-
-        // 로그아웃 전 세션 정보 출력
         System.out.println("=== 로그아웃 전 세션 ID : " + context.session().id());
         System.out.println("=== 로그아웃 전 loginUser : " + context.session().get("loginUser"));
 
         // 세션 전체 삭제
         context.session().destroy();
 
-        // 로그아웃 후 세션 정보 출력
-        System.out.println("=== 로그아웃 후 세션 ID : " + context.session().id());
-        System.out.println("=== 로그아웃 후 loginUser : " + context.session().get("loginUser"));
-
         return Response
                 .seeOther(URI.create("/"))
                 .build();
     }
 
+    // GET /register → 회원가입 페이지
+    @GET
+    @Path("/register")
+    @Produces(MediaType.TEXT_HTML)
+    public Response registerPage() {
+        InputStream html = getClass()
+                .getClassLoader()
+                .getResourceAsStream("META-INF/resources/login/register.html");
+
+        return Response.ok(html).build();
+    }
+
+    // POST /register_check → 회원가입 처리
     @POST
     @Path("/register_check")
     @Transactional
@@ -121,58 +145,205 @@ public class AuthResource {
     @Produces(MediaType.TEXT_HTML)
     public Response registerCheck(
             @FormParam("username") String username,
-            @FormParam("password") String password, // SHA-256 해시값
+            @FormParam("password") String password,
             @FormParam("email") String email,
             @FormParam("phone") String phone) {
 
-        // ①아이디중복체크
+        // ① 아이디 중복 체크
         if (User.findByUsername(username) != null) {
             return Response
                     .seeOther(URI.create("/register?error=duplicate_username"))
                     .build();
         }
 
-        // ②이메일중복체크
+        // ② 이메일 중복 체크
         if (User.findByEmail(email) != null) {
             return Response
                     .seeOther(URI.create("/register?error=duplicate_email"))
                     .build();
         }
-        // ③DB 삽입
+
+        // ③ DB 삽입
         User newUser = new User();
         newUser.username = username;
-        newUser.password = password; // 해시값저장
+        newUser.password = password;
         newUser.email = email;
         newUser.phone = phone;
         newUser.persist();
 
-        // ④가입완료페이지로이동
+        // ④ 가입 완료 페이지로 이동
         return Response
                 .seeOther(URI.create("/register_success"))
                 .build();
     }
 
+    // GET /register_success → 회원가입 성공 페이지
     @GET
     @Path("/register_success")
     @Produces(MediaType.TEXT_HTML)
     public Response registerSuccess() {
         InputStream html = getClass()
                 .getClassLoader()
-                .getResourceAsStream(
-                        "META-INF/resources/login/register_success.html");
+                .getResourceAsStream("META-INF/resources/login/register_success.html");
+
         return Response.ok(html).build();
     }
 
-    // AuthResource.java 아래새로추가
-@GET
-@Path("/register")
-@Produces(MediaType.TEXT_HTML)
-public Response registerPage() {
-    InputStream html = getClass()
-            .getClassLoader()
-            .getResourceAsStream(
-                    "META-INF/resources/login/register.html");
-    return Response.ok(html).build();
-}
+    // GET /profile → 프로필 페이지
+    @GET
+    @Path("/profile")
+    @Produces(MediaType.TEXT_HTML)
+    public Response profilePage() {
+        // ① 세션 체크
+        String loginUser = context.session().get("loginUser");
 
+        if (loginUser == null) {
+            return Response
+                    .seeOther(URI.create("/login"))
+                    .build();
+        }
+
+        // ② DB에서 사용자 정보 조회
+        User user = User.findByUsername(loginUser);
+
+        if (user == null) {
+            context.session().destroy();
+
+            return Response
+                    .seeOther(URI.create("/login"))
+                    .build();
+        }
+
+        // ③ 세션에 사용자 정보 저장
+        context.session().put("userEmail", user.email);
+        context.session().put("userPhone", user.phone);
+        context.session().put(
+                "profileImage",
+                user.profileImage != null ? user.profileImage : "default.png");
+
+        // ④ 프로필 페이지 반환
+        InputStream html = getClass()
+                .getClassLoader()
+                .getResourceAsStream("META-INF/resources/login/profile.html");
+
+        return Response.ok(html).build();
+    }
+
+    // GET /profile/info → 프로필 정보 JSON
+    @GET
+    @Path("/profile/info")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response profileInfo() {
+        // ① 세션 체크
+        String loginUser = context.session().get("loginUser");
+
+        if (loginUser == null) {
+            return Response.status(401).build();
+        }
+
+        // ② DB 조회
+        User user = User.findByUsername(loginUser);
+
+        if (user == null) {
+            return Response.status(404).build();
+        }
+
+        // ③ JSON 응답
+        return Response.ok(
+                Map.of(
+                        "username", user.username,
+                        "email", user.email != null ? user.email : "",
+                        "phone", user.phone != null ? user.phone : "",
+                        "profileImage", user.profileImage != null ? user.profileImage : ""))
+                .build();
+    }
+
+    // POST /profile/upload → 프로필 이미지 업로드
+    @POST
+    @Path("/profile/upload")
+    @Transactional
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response profileUpload(
+            @RestForm("profileImage") FileUpload file) {
+
+        // ① 세션 체크
+        String loginUser = context.session().get("loginUser");
+
+        if (loginUser == null) {
+            return Response
+                    .seeOther(URI.create("/login"))
+                    .build();
+        }
+
+        // ② 파일 선택 여부 체크
+        if (file == null || file.fileName() == null || file.fileName().isBlank()) {
+            return Response
+                    .seeOther(URI.create("/profile?error=no_file"))
+                    .build();
+        }
+
+        try {
+            // ③ 확장자 검사
+            String original = file.fileName();
+
+            int dotIndex = original.lastIndexOf(".");
+            if (dotIndex == -1) {
+                return Response
+                        .seeOther(URI.create("/profile?error=invalid_type"))
+                        .build();
+            }
+
+            String ext = original.substring(dotIndex + 1).toLowerCase();
+
+            if (!ext.matches("jpg|jpeg|png|gif|webp")) {
+                return Response
+                        .seeOther(URI.create("/profile?error=invalid_type"))
+                        .build();
+            }
+
+            // ④ 파일 크기 검사, 5MB
+            if (file.size() > 5 * 1024 * 1024) {
+                return Response
+                        .seeOther(URI.create("/profile?error=too_large"))
+                        .build();
+            }
+
+            // ⑤ UUID 파일명 생성
+            String newFileName = UUID.randomUUID().toString() + "." + ext;
+
+            // ⑥ 저장 폴더 생성
+            java.nio.file.Path uploadDir = Paths.get(
+                    "src/main/resources/META-INF/resources/uploads/profile");
+
+            Files.createDirectories(uploadDir);
+
+            // ⑦ 파일 저장
+            Files.copy(
+                    file.uploadedFile(),
+                    uploadDir.resolve(newFileName),
+                    StandardCopyOption.REPLACE_EXISTING);
+
+            // ⑧ DB 업데이트
+            User user = User.findByUsername(loginUser);
+
+            if (user == null) {
+                return Response
+                        .seeOther(URI.create("/login"))
+                        .build();
+            }
+
+            user.profileImage = newFileName;
+
+            return Response
+                    .seeOther(URI.create("/profile"))
+                    .build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return Response
+                    .seeOther(URI.create("/profile?error=upload_fail"))
+                    .build();
+        }
+    }
 }
